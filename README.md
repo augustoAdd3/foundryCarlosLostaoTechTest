@@ -20,7 +20,7 @@ The challenge was composed of three contracts:
 
 Just for checking out the code is alright🤓
 
-⚠️You need Foundry to be installed ⚠️
+⚠️You need Foundry to be [installed](https://book.getfoundry.sh/getting-started/installation) ⚠️
 
 ```
 forge test
