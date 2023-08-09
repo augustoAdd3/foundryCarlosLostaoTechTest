@@ -5,17 +5,18 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import "./Token.sol";
 
+import {Test, console2} from "forge-std/Test.sol";
+
 contract Staking is Initializable, Ownable {
     address public token;
 
+    uint256 dynamicTokensPerYear;
     uint256 dynamicRewardsLastTime = block.timestamp;
+    // 12 decimal point precision
     uint256 dynamicRewardsPerToken = 0;
 
     // 1e12 -> 1%
-    uint256 targetAnnualInterestRate;
-
-    // 12 decimal point precision
-    uint256 public rewardPerStakedToken = 0;
+    uint256 staticAnnualInterestRate;
 
     struct UserStakeInfo {
         uint256 amount;
@@ -32,12 +33,14 @@ contract Staking is Initializable, Ownable {
         address _token,
         bool _staticMode,
         bool _autoCompounding,
-        uint256 _targetAnnualInterestRate
+        uint256 _staticAnnualInterestRate,
+        uint256 _dynamicTokensPerYear
     ) public initializer {
         token = _token;
         staticMode = _staticMode;
         autoCompounding = _autoCompounding;
-        targetAnnualInterestRate = _targetAnnualInterestRate;
+        staticAnnualInterestRate = _staticAnnualInterestRate;
+        dynamicTokensPerYear = _dynamicTokensPerYear;
     }
 
     // Set up modes
@@ -61,7 +64,7 @@ contract Staking is Initializable, Ownable {
         user.amount += amount;
 
         user.lastDepositTimestamp = block.timestamp;
-        user.alreadyPaid = (user.amount * rewardPerStakedToken) / 1e12;
+        user.alreadyPaid = (user.amount * dynamicRewardsPerToken) / 1e12;
     }
 
     function withdraw(uint256 amount) external {
@@ -77,7 +80,7 @@ contract Staking is Initializable, Ownable {
         user.amount -= amount;
 
         user.lastDepositTimestamp = block.timestamp;
-        user.alreadyPaid = (user.amount * rewardPerStakedToken) / 1e12;
+        user.alreadyPaid = (user.amount * dynamicRewardsPerToken) / 1e12;
     }
 
     // Internal functions
@@ -93,7 +96,7 @@ contract Staking is Initializable, Ownable {
             if (staked == 0) return;
 
             rewards =
-                (user.amount * targetAnnualInterestRate * timeElapsed) /
+                (user.amount * staticAnnualInterestRate * timeElapsed) /
                 365 days /
                 1e14;
         } else {
@@ -101,10 +104,14 @@ contract Staking is Initializable, Ownable {
             if (staked == 0) return;
 
             uint256 pendingReward = ((block.timestamp -
-                dynamicRewardsLastTime) * targetAnnualInterestRate) / 365 days;
+                dynamicRewardsLastTime) * dynamicTokensPerYear) / 365 days;
+
             dynamicRewardsPerToken += (pendingReward * 1e12) / staked;
             dynamicRewardsLastTime = block.timestamp;
-            rewards = (user.amount * dynamicRewardsPerToken) - user.alreadyPaid;
+            rewards =
+                (user.amount * dynamicRewardsPerToken) /
+                1e12 -
+                user.alreadyPaid;
         }
 
         if (autoCompounding) {
