@@ -55,7 +55,7 @@ contract Staking is Initializable, Ownable {
 
     // User interacting
 
-    function deposit(uint256 amount) external {
+    function deposit(uint256 amount) public {
         UserStakeInfo storage user = userInfo[msg.sender];
 
         accrueRewards(msg.sender);
@@ -67,7 +67,7 @@ contract Staking is Initializable, Ownable {
         user.alreadyPaid = (user.amount * dynamicRewardsPerToken) / 1e12;
     }
 
-    function withdraw(uint256 amount) external {
+    function withdraw(uint256 amount) public {
         UserStakeInfo storage user = userInfo[msg.sender];
 
         accrueRewards(msg.sender);
@@ -81,6 +81,22 @@ contract Staking is Initializable, Ownable {
 
         user.lastDepositTimestamp = block.timestamp;
         user.alreadyPaid = (user.amount * dynamicRewardsPerToken) / 1e12;
+    }
+
+    function claimRewards() external {
+        if (autoCompounding) {
+            uint256 amount = userInfo[msg.sender].amount;
+
+            accrueRewards(msg.sender);
+
+            uint256 accruedRewards = userInfo[msg.sender].amount - amount;
+
+            require(accruedRewards > 0, "Staking: No rewards pending");
+
+            withdraw(accruedRewards);
+        } else {
+            deposit(0);
+        }
     }
 
     // Internal functions

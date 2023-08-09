@@ -133,4 +133,36 @@ contract TokenTest is Test {
         assert(token.balanceOf(MEANINGLESS_ADDRESS) <= 1.5 ether);
         assert(token.balanceOf(MEANINGLESS_ADDRESS) >= 1.4 ether);
     }
+
+    function test_claimRewardsNotCompounding() public {
+        staking.initialize(address(token), true, false, 100e12, 0 ether);
+
+        token.mint(address(this), 1 ether);
+
+        token.transferOwnership(address(staking));
+        token.approve(address(staking), 1 ether);
+        staking.deposit(1 ether);
+
+        vm.warp(block.timestamp + 365 days);
+
+        staking.claimRewards();
+
+        assert(token.balanceOf(address(this)) == 1 ether);
+    }
+
+    function test_claimRewardsCompounding() public {
+        staking.initialize(address(token), true, true, 100e12, 0 ether);
+
+        token.mint(address(this), 1 ether);
+
+        token.transferOwnership(address(staking));
+        token.approve(address(staking), 1 ether);
+        staking.deposit(1 ether);
+
+        vm.warp(block.timestamp + 365 days);
+
+        staking.claimRewards();
+
+        assert(token.balanceOf(address(this)) == 1 ether);
+    }
 }
