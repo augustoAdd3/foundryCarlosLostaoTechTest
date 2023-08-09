@@ -1551,10 +1551,10 @@
         }
       }
     },
-    "script/Counter.s.sol": {
-      "lastModificationDate": 1691430200546,
-      "contentHash": "7539680fbd3ad49c6632713cc2bb6bf6",
-      "sourceName": "script/Counter.s.sol",
+    "script/Staking.s.sol": {
+      "lastModificationDate": 1691603980446,
+      "contentHash": "e9cb2b6d5507cf7c477523a1bbf67a98",
+      "sourceName": "script/Staking.s.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -1585,31 +1585,55 @@
         }
       },
       "imports": [
+        "lib/forge-std/lib/ds-test/src/test.sol",
         "lib/forge-std/src/Base.sol",
         "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/StdAssertions.sol",
         "lib/forge-std/src/StdChains.sol",
         "lib/forge-std/src/StdCheats.sol",
+        "lib/forge-std/src/StdError.sol",
+        "lib/forge-std/src/StdInvariant.sol",
         "lib/forge-std/src/StdJson.sol",
         "lib/forge-std/src/StdMath.sol",
         "lib/forge-std/src/StdStorage.sol",
         "lib/forge-std/src/StdStyle.sol",
         "lib/forge-std/src/StdUtils.sol",
+        "lib/forge-std/src/Test.sol",
         "lib/forge-std/src/Vm.sol",
         "lib/forge-std/src/console.sol",
         "lib/forge-std/src/console2.sol",
         "lib/forge-std/src/interfaces/IMulticall3.sol",
-        "lib/forge-std/src/safeconsole.sol"
+        "lib/forge-std/src/safeconsole.sol",
+        "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+        "lib/openzeppelin-contracts/contracts/interfaces/IERC1967.sol",
+        "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC1822.sol",
+        "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol",
+        "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Upgrade.sol",
+        "lib/openzeppelin-contracts/contracts/proxy/Proxy.sol",
+        "lib/openzeppelin-contracts/contracts/proxy/beacon/IBeacon.sol",
+        "lib/openzeppelin-contracts/contracts/proxy/transparent/TransparentUpgradeableProxy.sol",
+        "lib/openzeppelin-contracts/contracts/proxy/utils/Initializable.sol",
+        "lib/openzeppelin-contracts/contracts/security/Pausable.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol",
+        "src/Proxy.sol",
+        "src/Staking.sol",
+        "src/Token.sol"
       ],
       "versionRequirement": "^0.8.13",
       "artifacts": {
-        "CounterScript": {
-          "0.8.21+commit.d9974bed.Darwin.appleclang": "Counter.s.sol/CounterScript.json"
+        "DeployingContract": {
+          "0.8.21+commit.d9974bed.Darwin.appleclang": "Staking.s.sol/DeployingContract.json"
         }
       }
     },
     "src/Proxy.sol": {
-      "lastModificationDate": 1691440979756,
-      "contentHash": "73b54fcf78681dc683112771b0af88b7",
+      "lastModificationDate": 1691603949144,
+      "contentHash": "c35f594ea6ac510a7459d9ba5d40714d",
       "sourceName": "src/Proxy.sol",
       "solcConfig": {
         "settings": {
@@ -1656,8 +1680,8 @@
       ],
       "versionRequirement": "^0.8.21",
       "artifacts": {
-        "ProxyBridge": {
-          "0.8.21+commit.d9974bed.Darwin.appleclang": "Proxy.sol/ProxyBridge.json"
+        "ProxyStaking": {
+          "0.8.21+commit.d9974bed.Darwin.appleclang": "Proxy.sol/ProxyStaking.json"
         }
       }
     },

@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ProxyBridge is Ownable, ERC1967Proxy {
+contract ProxyStaking is Ownable, ERC1967Proxy {
     constructor(address _logic, bytes memory data) ERC1967Proxy(_logic, data) {}
 
     modifier ifAdmin() {
