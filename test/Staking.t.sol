@@ -15,7 +15,7 @@ contract TokenTest is Test {
     }
 
     function test_staticStakingNotCompounding() public {
-        staking.initialize(address(token), true, false, 0, 100e12);
+        staking.initialize(address(token), true, false, 100e12);
 
         token.mint(address(this), 1 ether);
 
@@ -31,7 +31,7 @@ contract TokenTest is Test {
     }
 
     function test_staticStakingCompounding() public {
-        staking.initialize(address(token), true, true, 0, 100e12);
+        staking.initialize(address(token), true, true, 100e12);
 
         token.mint(address(this), 1 ether);
 

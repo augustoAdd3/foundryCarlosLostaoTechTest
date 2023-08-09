@@ -8,12 +8,11 @@ import "./Token.sol";
 contract Staking is Initializable, Ownable {
     address public token;
 
-    uint256 dynamicRewardsPerDay;
     uint256 dynamicRewardsLastTime = block.timestamp;
     uint256 dynamicRewardsPerToken = 0;
 
     // 1e12 -> 1%
-    uint256 staticAnnualInterestRate;
+    uint256 targetAnnualInterestRate;
 
     // 12 decimal point precision
     uint256 public rewardPerStakedToken = 0;
@@ -33,14 +32,12 @@ contract Staking is Initializable, Ownable {
         address _token,
         bool _staticMode,
         bool _autoCompounding,
-        uint256 _dynamicRewardsPerDay,
-        uint256 _staticAnnualInterestRate
+        uint256 _targetAnnualInterestRate
     ) public initializer {
         token = _token;
         staticMode = _staticMode;
         autoCompounding = _autoCompounding;
-        dynamicRewardsPerDay = _dynamicRewardsPerDay;
-        staticAnnualInterestRate = _staticAnnualInterestRate;
+        targetAnnualInterestRate = _targetAnnualInterestRate;
     }
 
     // Set up modes
@@ -96,7 +93,7 @@ contract Staking is Initializable, Ownable {
             if (staked == 0) return;
 
             rewards =
-                (user.amount * staticAnnualInterestRate * timeElapsed) /
+                (user.amount * targetAnnualInterestRate * timeElapsed) /
                 365 days /
                 1e14;
         } else {
@@ -104,7 +101,7 @@ contract Staking is Initializable, Ownable {
             if (staked == 0) return;
 
             uint256 pendingReward = ((block.timestamp -
-                dynamicRewardsLastTime) * dynamicRewardsPerDay) / 1 days;
+                dynamicRewardsLastTime) * targetAnnualInterestRate) / 365 days;
             dynamicRewardsPerToken += (pendingReward * 1e12) / staked;
             dynamicRewardsLastTime = block.timestamp;
             rewards = (user.amount * dynamicRewardsPerToken) - user.alreadyPaid;

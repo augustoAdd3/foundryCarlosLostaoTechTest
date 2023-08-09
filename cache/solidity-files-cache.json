@@ -1662,8 +1662,8 @@
       }
     },
     "src/Staking.sol": {
-      "lastModificationDate": 1691528648523,
-      "contentHash": "5ceae2c3e2abaf5afb3b042bbfcff5cb",
+      "lastModificationDate": 1691599247462,
+      "contentHash": "6f6d7589d79416239ecc5fa28f673347",
       "sourceName": "src/Staking.sol",
       "solcConfig": {
         "settings": {
@@ -1768,8 +1768,8 @@
       }
     },
     "test/Staking.t.sol": {
-      "lastModificationDate": 1691528439711,
-      "contentHash": "8e2c903251c31ae4345c77512c4b3a07",
+      "lastModificationDate": 1691599264249,
+      "contentHash": "4d8a1ad77161fdc294c50a326b07731d",
       "sourceName": "test/Staking.t.sol",
       "solcConfig": {
         "settings": {
