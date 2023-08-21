@@ -46,6 +46,11 @@ contract Staking is Initializable, Ownable {
     // Set up modes
 
     function setAutoCompouding(bool _autoCompounding) external onlyOwner {
+        /*** 
+         * This should define the working conditions of the contract 
+         *  You should setup a modifier to make this function callable once
+         * and do not allow any other function to be operative if this initial function has not been called
+          */
         autoCompounding = _autoCompounding;
     }
 
@@ -59,7 +64,11 @@ contract Staking is Initializable, Ownable {
         UserStakeInfo storage user = userInfo[msg.sender];
 
         accrueRewards(msg.sender);
-
+/*** 
+         * this 
+         * does not follow the Check-Effects-interactions pattern 
+         * https://fravoll.github.io/solidity-patterns/checks_effects_interactions.html
+          */
         Token(token).transferFrom(msg.sender, address(this), amount);
         user.amount += amount;
 
@@ -77,6 +86,11 @@ contract Staking is Initializable, Ownable {
         }
 
         Token(token).transfer(msg.sender, amount);
+        /*** 
+         * this 
+         * does not follow the Check-Effects-interactions pattern 
+         * https://fravoll.github.io/solidity-patterns/checks_effects_interactions.html
+          */
         user.amount -= amount;
 
         user.lastDepositTimestamp = block.timestamp;
@@ -132,9 +146,51 @@ contract Staking is Initializable, Ownable {
 
         if (autoCompounding) {
             Token(token).mint(address(this), rewards);
+            /***
+             * The contract doesn't have to "create" or mint new tokens
+             * It have to be connected to a Vault which contains
+             * all the Rewards Tokens
+             */
             user.amount += rewards;
         } else {
             Token(token).mint(account, rewards);
         }
     }
 }
+
+/**
+ * In case of Dynamic Staking
+ * the Vault plays an important role to determine the current rate
+ * 
+ * Infact use the utiilization rate = DEMAND / SUPPLY
+ * where ,
+ * DEMAND = Total tokens Staked
+ * SUPPLY = Total Rewards tokens
+ * 
+ * The APY is simply the inverse of the utilization rate 
+ * since staked tokens are expected to be > than the rewards 
+ * calculating the APY directly will incurr in a Numeric error i.e. 1110 TKN /1000000 TKN = 0
+ * 
+ * So at initialization of with a second function that is required for the contract to start working
+ * 
+ * You pass the array of possible utilization levels you will cover and the array of the relative APY 
+ * your contract will assume while its operating phase.
+ * 
+ * at each utilization level range you associate an APY.
+ * 
+ * ASSIGNATION
+ * This utilization an APY rates setup function should be able to be called by a relay that has a VALID EIP-712 signature from the owner.
+ * So you have to check that who signed that EIP-712 was the Owner. 
+ * 
+ * 
+
+ */
+
+/***
+ * All the functions open to public are not protected with NoReentrancy modifier
+ */
+
+/**
+ * Since the APY in case of dynamic will change during time you have to find a way to 
+ * keep track of this rate change and adjust each user rewards taking account of rate fluctuations 
+ */
